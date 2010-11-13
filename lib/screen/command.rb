@@ -31,7 +31,7 @@ module Screen::Command
 	FUNCTIONAL_COMMANDS.each do |cmd|
 		define_method(cmd) {|*args|
 			Screen.screen(
-				:session_name => @session_name,
+				:session => @session_name,
 				:eval => [cmd, *args].join(' ')
 			)
 		}
@@ -40,7 +40,7 @@ module Screen::Command
 	DECLARATIVE_COMMANDS.each do |cmd|
 		define_method(cmd) {
 			Screen.screen(
-				:session_name => @session_name,
+				:session => @session_name,
 				:eval => cmd
 			)
 		}
