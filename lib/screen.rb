@@ -1,7 +1,8 @@
 module Screen
 	OPTION = {
 		:config => '-c %s',
-		:escape => '-e %s%s',
+		:detached => '-d -m',
+		:escape => '-e %s',
 		:scrollback => '-h %s',
 		:ls => '-ls',
 		:logging => '-L',
@@ -13,15 +14,21 @@ module Screen
 		:utf8 => '-U',
 		:version => '-v',
 		:multi_attach => '-x %s',
-		:eval => '-X %s',
+		:eval => '-X "%s"',
 	}
 
-	autoload :Command, 'screen/command'
-	autoload :Session, 'screen/session'
-	autoload :Window,  'screen/window'
+	require "screen/command"
+	require "screen/window"
+	require "screen/session"
 
 	def screen(opts={})
-		Kernel.system('screen', *opts.map {|k, v| self::OPTION[k] % *[v] })
+		arg = ['screen']
+		cmd = opts.delete(:command)
+		arg << opts.map {|k, v|
+			self::OPTION[k] % [v].join(' ')
+		}
+		arg << cmd
+		system arg.join(' ')
 	end
 	module_function :screen
 end
